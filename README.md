@@ -1,24 +1,23 @@
-# OGG-Transcriber
+# Audio Transcriber
 
-A powerful and efficient Python script for transcribing audio files using Groq API with OpenAI's Whisper model. This tool automatically converts various audio formats to MP3 using FFmpeg and provides fast, accurate transcriptions.
+A powerful and efficient Python script for transcribing audio files using the high-speed Groq API with OpenAI's Whisper model. This tool automatically converts various audio formats to MP3 using FFmpeg and provides fast, accurate transcriptions.
 
 ## Features
 
-- **Multi-Format Support**: Transcribes various audio formats including `.ogg`, `.wav`, `.flac`, `.m4a`, `.aac`, and more
-- **Automatic Conversion**: Uses FFmpeg to seamlessly convert audio files to MP3 format
-- **High-Speed Transcription**: Leverages Groq API with the `whisper-large-v3` model for fast processing
-- **Batch Processing**: Process entire folders of audio files at once
-- **Single File Mode**: Option to transcribe individual audio files
-- **Organized Output**: Saves converted MP3 files and transcriptions in a designated output folder
-- **Dependency Check**: Built-in verification to ensure FFmpeg is installed and accessible
+- **Multi-Format Support**: Transcribes various audio formats, including `.ogg`, `.wav`, `.flac`, `.m4a`, `.aac`, `.mp3`, and more.
+- **Automatic Conversion**: Seamlessly converts non-MP3 audio files to the required format using FFmpeg.
+- **High-Speed Transcription**: Leverages the Groq API with the `whisper-large-v3` model for incredibly fast processing.
+- **Secure Configuration**: Manages API keys and settings through a `.env` file for better security.
+- **Organized Output**: Saves the converted MP3 file and the final transcription to a designated output folder.
+- **Dependency Check**: Includes a built-in verification to ensure FFmpeg is installed and accessible.
 
 ## Prerequisites
 
-Before you begin, ensure you have:
+Before you begin, ensure you have the following installed and configured:
 
 - **Python 3.7+**
-- **FFmpeg**: Cross-platform multimedia framework for audio/video processing
-- **Groq API Key**: Obtain from [GroqCloud](https://groq.com)
+- **FFmpeg**: A cross-platform framework for audio and video processing.
+- **Groq API Key**: You can obtain one from [GroqCloud](https://console.groq.com/keys).
 
 ## Installation
 
@@ -28,98 +27,86 @@ Before you begin, ensure you have:
    cd OGG-Transcriber
    ```
 
-2. **Install Python dependencies:**
+2. **Install the required Python dependencies:**
    ```bash
-   pip install groq
+   pip install python-dotenv groq pydub
    ```
 
 3. **Install FFmpeg:**
-   
-   **Windows:** Download from the [official FFmpeg website](https://ffmpeg.org/download.html) and add the `bin` directory to your system's PATH.
-   
-   **macOS (using Homebrew):**
-   ```bash
-   brew install ffmpeg
-   ```
-   
-   **Linux (using APT):**
-   ```bash
-   sudo apt update && sudo apt install ffmpeg
-   ```
+
+   - **Windows:** Download from the [official FFmpeg website](https://ffmpeg.org/download.html) and add the `bin` directory to your system's PATH.
+   - **macOS (using Homebrew):**
+     ```bash
+     brew install ffmpeg
+     ```
+   - **Linux (using APT):**
+     ```bash
+     sudo apt update && sudo apt install ffmpeg
+     ```
 
 ## Usage
 
-### 1. Configure the Script
+### 1. Create a Configuration File
 
-Open `transcriber.ipynb` and set your Groq API key:
+Create a file named `.env` in the root of the project directory. Add your Groq API key and specify an output folder:
+
+```env
+# .env file
+GROQ_API_KEY="your_groq_api_key_here"
+OUTPUT_FOLDER="transcriptions"
+```
+
+### 2. Set the Input File Path
+
+Open the `transcriber.ipynb` notebook and update the `INPUT_FILE` variable to the path of the audio file you want to transcribe:
 
 ```python
-# Configuration
-GROQ_API_KEY = "your_groq_api_key_here"  # Replace with your actual API key
-```
-
-### 2. Prepare Your Audio Files
-
-Create an `audio_files` folder in the project root and place your audio files inside:
-
-```
-OGG-Transcriber/
-├── audio_files/
-│   ├── recording1.ogg
-│   └── meeting_audio.wav
-├── transcriber.ipynb
-└── README.md
+# --- SET YOUR INPUT FILE HERE ---
+INPUT_FILE = "path/to/your/audio_file.wav"  # <--- REPLACE WITH THE PATH TO YOUR AUDIO FILE
 ```
 
 ### 3. Run the Script
 
-Open and execute the cells in `transcriber.ipynb` using a Jupyter environment (Jupyter Lab, VS Code, etc.). The script will:
+Open and execute the cells in `transcriber.ipynb` using a Jupyter environment (like Jupyter Lab, VS Code, or Google Colab). The script will:
 
-- Verify FFmpeg installation
-- Convert audio files to MP3 format
-- Transcribe MP3 files using Groq API
-- Save results to the output folder
+- Verify that FFmpeg is installed.
+- Load your configuration from the `.env` file.
+- Convert your audio file to MP3 format (if it isn't already).
+- Transcribe the audio using the Groq API.
+- Print the transcription directly in the notebook.
+- Save the results to the output folder.
 
-### 4. Access Results
+### 4. Access the Results
 
-Converted `.mp3` files and corresponding `.txt` transcriptions will be saved in the `converted_mp3` folder.
-
-## Configuration Options
-
-Customize the following variables in `transcriber.ipynb`:
-
-- `GROQ_API_KEY`: (Required) Your Groq API access key
-- `INPUT_FOLDER`: Source directory for audio files (default: `"audio_files"`)
-- `OUTPUT_FOLDER`: Destination for converted files and transcriptions (default: `"converted_mp3"`)
+The converted `.mp3` file and the corresponding `_transcription.txt` file will be saved in the folder you specified in the `OUTPUT_FOLDER` variable (e.g., `transcriptions/`).
 
 ## How It Works
 
-The transcription process follows this workflow:
+The transcription process follows this simple workflow:
 
 ```
-Audio File → FFmpeg Conversion → MP3 File → Groq API (Whisper) → Transcription
+Audio File → FFmpeg Conversion → MP3 File → Groq API (Whisper) → Transcription Text
 ```
 
-1. **Initialize**: Verify FFmpeg availability
-2. **Scan**: Detect all supported audio files in the input folder
-3. **Convert**: Convert files to 192k bitrate MP3 using FFmpeg (skip if already MP3)
-4. **Transcribe**: Process MP3 files through Groq API with `whisper-large-v3` model
-5. **Save**: Store transcription text in corresponding `.txt` files
+1. **Initialize**: The script starts by verifying FFmpeg's availability and loading your environment variables.
+2. **Convert**: The input audio file is converted to a 192k bitrate MP3 using FFmpeg (this step is skipped if the file is already an MP3).
+3. **Transcribe**: The MP3 file is sent to the Groq API, which processes it with the `whisper-large-v3` model.
+4. **Save**: The final transcription is saved as a `.txt` file in the specified output folder.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
 ## Acknowledgements
 
-- **Groq**: For their incredibly fast API service
-- **OpenAI**: For developing the powerful Whisper model
-- **FFmpeg Community**: For their essential multimedia framework
+- **Groq**: For their incredibly fast API service.
+- **OpenAI**: For developing the powerful Whisper ASR model.
+- **FFmpeg Community**: For their essential and versatile multimedia framework.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! If you have suggestions or improvements, please feel free to fork the repository and submit a pull request.
 
 ## Support
 
-If you encounter any issues or have questions, please open an issue on the GitHub repository.
+If you encounter any issues or have questions, please open an issue on the [GitHub repository](https://github.com/SakibAhmedShuva/OGG-Transcriber).
